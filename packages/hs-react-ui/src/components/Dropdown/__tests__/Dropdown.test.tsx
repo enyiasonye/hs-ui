@@ -10,23 +10,23 @@ describe('Dropdown', () => {
     expect(container).toMatchSnapshot();
   });
 
-  it('displays all options when focused', () => {
+  it('displays all options when clicked', () => {
     const options = ['Bulbasaur', 'Charmander', 'Squirtle'];
     const { container, getByTestId, getByText } = render(
       <Dropdown name="choosePokemon" options={options} />,
     );
-    fireEvent.focus(getByTestId('choosePokemon-valueContainer'));
+    fireEvent.click(getByTestId('choosePokemon-valueContainer'));
     expect(container).toMatchSnapshot();
   });
 
-  it('can focus dropdown and select option', async () => {
+  it('can click dropdown and select option', async () => {
     const options = ['Bulbasaur', 'Charmander', 'Squirtle'];
     const { container, getByTestId, getByText } = render(
       <Dropdown name="choosePokemon" options={options} />,
     );
 
     // TODO - Don't use data-testid, see if we can use a more semantically meaningful element
-    fireEvent.focus(getByTestId('choosePokemon-valueContainer'));
+    fireEvent.click(getByTestId('choosePokemon-valueContainer'));
     await waitFor(() => getByText('Charmander'));
     fireEvent.click(getByText('Charmander'));
     expect(container).toMatchSnapshot();
@@ -38,7 +38,7 @@ describe('Dropdown', () => {
       <Dropdown multi name="choosePokemon" options={options} />,
     );
 
-    getByTestId('choosePokemon-valueContainer').focus();
+    getByTestId('choosePokemon-valueContainer').click();
     fireEvent.click(getByText('Charmander'));
     fireEvent.click(getByText('Squirtle'));
     fireEvent.blur(getByTestId('choosePokemon-valueContainer'));
@@ -53,7 +53,7 @@ describe('Dropdown', () => {
       <Dropdown multi name="choosePokemon" options={options} />,
     );
 
-    fireEvent.focus(getByTestId('choosePokemon-valueContainer'));
+    fireEvent.click(getByTestId('choosePokemon-valueContainer'));
     fireEvent.click(getByText('Charmander'));
     fireEvent.click(getAllByText(/Charmander/)[1]);
     fireEvent.blur(getByTestId('choosePokemon-valueContainer'));
@@ -66,7 +66,7 @@ describe('Dropdown', () => {
       <Dropdown name="choosePokemon" options={options} />,
     );
 
-    getByTestId('choosePokemon-valueContainer').focus();
+    getByTestId('choosePokemon-valueContainer').click();
     await waitFor(() => queryByText('Squirtle') !== null);
     const optionsOutFrag = asFragment();
     expect(optionsOutFrag).toMatchSnapshot();
@@ -83,7 +83,7 @@ describe('Dropdown', () => {
     const { container, getByTestId, getByText, queryByText, rerender } = render(
       <Dropdown name="choosePokemon" options={options} />,
     );
-    getByTestId('choosePokemon-valueContainer').focus();
+    getByTestId('choosePokemon-valueContainer').click();
     await waitFor(() => queryByText('Bulbasaur') !== null);
     fireEvent.keyDown(document.activeElement, { key: 'ArrowDown', code: 'ArrowDown' });
     fireEvent.keyDown(document.activeElement, { key: 'ArrowDown', code: 'ArrowDown' });

@@ -40,7 +40,8 @@ export type ButtonProps = {
   variant?: ButtonVariants;
   type?: ButtonTypes;
   color?: string;
-  onClick: (...args: any[]) => void;
+  onMouseDown?: (...args: any[]) => void;
+  onClick?: (...args: any[]) => void;
   LoadingBar?: string & StyledComponentBase<any, {}>;
 };
 
@@ -148,7 +149,8 @@ const Button = ({
   variant = ButtonVariants.fill,
   type = ButtonTypes.button,
   color = colors.grayDark,
-  onClick,
+  onMouseDown = () => {},
+  onClick = () => {},
   LoadingBar = StyledProgress,
 }: ButtonProps): JSX.Element | null => {
   const hasContent = Boolean(children);
@@ -157,6 +159,7 @@ const Button = ({
     <StyledContainer
       data-test-id="hsui-button"
       onClick={onClick}
+      onMouseDown={onMouseDown}
       elevation={elevation}
       color={color}
       variant={variant}
@@ -169,6 +172,7 @@ const Button = ({
     <StyledContainer
       data-test-id="hsui-button"
       onClick={onClick}
+      onMouseDown={onMouseDown}
       elevation={elevation}
       color={color}
       variant={variant}

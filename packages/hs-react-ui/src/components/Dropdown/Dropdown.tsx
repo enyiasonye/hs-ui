@@ -82,12 +82,10 @@ const OptionItem = styled(Div)`
   display: flex;
   align-items: center;
 
-  &:hover {
+  &:hover,
+  &:focus {
     background: ${colors.grayDark50};
     cursor: pointer;
-    outline: none;
-  }
-  &:focus {
     outline: none;
   }
 `;
@@ -144,10 +142,12 @@ const Dropdown = ({
 }: DropdownProps): JSX.Element | null => {
   const [state, setState] = useState<{
     isOpen: boolean;
+    isFocused: boolean;
     selectedValues: Array<string>;
     id: string;
   }>({
     isOpen: false,
+    isFocused: false,
     selectedValues: values,
     id: name,
   });
@@ -158,7 +158,7 @@ const Dropdown = ({
       const target = e.nativeEvent.relatedTarget as HTMLElement | null;
       // check if we're focusing on something we don't control
       if (!target || (target.id && !target.id.startsWith(state.id))) {
-        setState(curState => ({ ...curState, isOpen: false }));
+        setState(curState => ({ ...curState, isOpen: false, isFocused: false }));
         if (onBlur) {
           onBlur();
         }
@@ -284,8 +284,10 @@ const Dropdown = ({
       name={name}
       onBlur={handleBlur}
       onFocus={(e: React.FocusEvent) => {
+        console.log('focused!');
         e.preventDefault();
-        setState(curState => ({ ...curState, isOpen: true }));
+        e.nativeEvent.stopImmediatePropagation();
+        setState(curState => ({ ...curState, isOpen: true, isFocused: true }));
       }}
       tabIndex={tabIndex}
     >
@@ -295,7 +297,14 @@ const Dropdown = ({
           modalIsOpen: state.isOpen,
         }}
         color={color}
-        onClick={(e: React.MouseEvent) => e.preventDefault()}
+        onMouseDown={e => {
+          console.log('mouse downed!');
+          setState(curState => ({ ...curState, isOpen: !curState.isOpen }));
+          if (state.isOpen) {
+            e.preventDefault();
+            e.stopPropagation();
+          }
+        }}
         variant={type}
       >
         <StyledValueItem>
@@ -310,6 +319,9 @@ const Dropdown = ({
               id={`${state.id}-option-${opt}`}
               key={`${state.id}-option-${opt}`}
               onBlur={handleBlur}
+              onFocus={() => {
+                console.log('speficic item focus');
+              }}
               onClick={() => handleSelect(opt)}
               tabIndex={tabIndex}
             >
